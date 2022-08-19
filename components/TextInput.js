@@ -83,16 +83,18 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Medium",
     marginBottom: 4,
   },
   textInput: {
     flex: 1,
     width: "100%",
     fontSize: 15,
+    fontFamily: "Poppins-Regular"
   },
   error: {
     fontSize: 13,
+    fontFamily: "Poppins-Regular",
     color: colors.danger,
     paddingTop: 4,
   },

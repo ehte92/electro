@@ -1,19 +1,24 @@
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import {
-  Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, Platform, Pressable, Text } from "react-native";
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
 import colors from "../assets/theme/colors";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
+import styled, { css } from "@emotion/native";
+import Background from "../components/Background";
+import Container from "../components/Container";
+
+const isIphoneX = () => {
+  const { height, width } = Dimensions.get("window");
+  return (
+    Platform.OS === "ios" &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    (height === 812 || width === 812)
+  );
+};
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -30,17 +35,14 @@ export default function LoginScreen({ navigation }) {
     }
   };
   return (
-    <ImageBackground
-      source={require("../assets/images/background_dot.png")}
-      resizeMode="repeat"
-      style={styles.background}
-    >
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <Image
-          source={require("../assets/images/login_logo.png")}
-          style={styles.image}
-        />
-        <Text style={styles.header}>Welcome back</Text>
+    <Background>
+      <Container
+        style={{
+          marginTop: isIphoneX() ? 88 : 64,
+        }}
+      >
+        <Image source={require("../assets/images/login_logo.png")} />
+        <Header>Welcome back</Header>
         <TextInput
           label="Username or Email"
           iconPosition="left"
@@ -78,71 +80,62 @@ export default function LoginScreen({ navigation }) {
           secureTextEntry={isSecureEntry}
           returnKeyType="done"
         />
-        <View style={styles.forgotPassword}>
+        <ForgotPasswordView>
           <Pressable
             onPress={() => {
               navigation.navigate("ForgotPassword");
             }}
           >
-            <Text style={styles.forgot}>Forgot your Password?</Text>
+            <ForgotText>Forgot your Password?</ForgotText>
           </Pressable>
-        </View>
-        <Button
-          title="LOGIN"
-          type="filled"
-          onPress={onLoginPressed}
-        />
-        <View style={styles.row}>
-          <Text>Don't have account?</Text>
+        </ForgotPasswordView>
+        <Button title="LOGIN" type="filled" onPress={onLoginPressed} />
+        <SignupView>
+          <Text
+            style={{
+              fontFamily: "Poppins-Regular",
+            }}
+          >
+            Don't have account?
+          </Text>
           <Pressable onPress={() => navigation.navigate("Signup")}>
-            <Text style={styles.link}>Sign up</Text>
+            <Text
+              style={css`
+                font-family: "Poppins-Medium";
+                color: ${colors.secondary};
+                margin-left: 4px;
+              `}
+            >
+              Sign up
+            </Text>
           </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </ImageBackground>
+        </SignupView>
+      </Container>
+    </Background>
   );
 }
 
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: "100%",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    width: "100%",
-    maxWidth: 340,
-    alignSelf: "center",
-    alignItems: "center",
-    //justifyContent: "center",
-  },
-  image: {
-    width: 110,
-    height: 110,
-    marginBottom: 8,
-  },
-  header: {
-    fontSize: 21,
-    fontWeight: "bold",
-    paddingVertical: 12,
-  },
-  forgotPassword: {
-    width: "100%",
-    alignItems: "flex-end",
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: "row",
-    marginTop: 4,
-  },
-  forgot: {
-    fontSize: 13,
-    color: colors.secondary,
-  },
-  link: {
-    fontWeight: "bold",
-    color: colors.secondary,
-    marginLeft: 4,
-  },
-});
+const Image = styled.Image`
+  width: 110px;
+  height: 110px;
+  margin-bottom: 8px;
+`;
+const Header = styled.Text`
+  font-size: 24px;
+  font-family: "Poppins-Medium";
+  padding-vertical: 12px;
+`;
+const ForgotPasswordView = styled.View`
+  width: 100%;
+  align-items: flex-end;
+  margin-bottom: 16px;
+`;
+const ForgotText = styled.Text`
+  font-size: 13px;
+  font-family: "Poppins-Regular";
+  color: ${colors.secondary};
+`;
+const SignupView = styled.View`
+  flex-direction: row;
+  margin-top: 4px;
+`;

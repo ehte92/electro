@@ -1,15 +1,22 @@
 import { useState } from "react";
-import {
-  Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import TextInput from "../components/TextInput";
 import { emailValidator } from "../helpers/emailValidator";
 import Button from "../components/Button";
+import Background from "../components/Background";
+import Container from "../components/Container";
+import styled from "@emotion/native";
+import { Dimensions, Platform } from "react-native";
+
+const isIphoneX = () => {
+  const { height, width } = Dimensions.get("window");
+  return (
+    Platform.OS === "ios" &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    (height === 812 || width === 812)
+  );
+};
 
 export default function ResetPasswordScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -23,17 +30,14 @@ export default function ResetPasswordScreen({ navigation }) {
     navigation.navigate("Login");
   };
   return (
-    <ImageBackground
-      source={require("../assets/images/background_dot.png")}
-      resizeMode="repeat"
-      style={styles.background}
-    >
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <Image
-          source={require("../assets/images/login_logo.png")}
-          style={styles.image}
-        />
-        <Text style={styles.header}>Restore Password</Text>
+    <Background>
+      <Container
+        style={{
+          marginTop: isIphoneX() ? 88 : 64,
+        }}
+      >
+        <Image source={require("../assets/images/login_logo.png")} />
+        <Header>Restore Password</Header>
         <TextInput
           label="Email Address"
           iconPosition="left"
@@ -49,47 +53,33 @@ export default function ResetPasswordScreen({ navigation }) {
           keyboardType="email-address"
           returnKeyType="done"
         />
-        <Text style={styles.description}>
+        <Description>
           You will receive email with password reset link.
-        </Text>
+        </Description>
         <Button
           title="Send Instructions"
-          type="outlined"
+          type="filled"
           onPress={sendResetPasswordEmail}
           style={{ marginTop: 16 }}
         />
-      </KeyboardAvoidingView>
-    </ImageBackground>
+      </Container>
+    </Background>
   );
 }
 
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: "100%",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    width: "100%",
-    maxWidth: 340,
-    alignSelf: "center",
-    alignItems: "center",
-    //justifyContent: "center",
-  },
-  image: {
-    width: 110,
-    height: 110,
-    marginBottom: 8,
-  },
-  header: {
-    fontSize: 21,
-    fontWeight: "bold",
-    paddingVertical: 12,
-  },
-  description: {
-    fontSize: 12,
-    color: "black",
-    textAlign: "center",
-  },
-});
+const Image = styled.Image`
+  width: 110px;
+  height: 110px;
+  margin-bottom: 8px;
+`;
+const Header = styled.Text`
+  font-size: 24px;
+  font-family: "Poppins-Medium";
+  padding-vertical: 12px;
+`;
+const Description = styled.Text`
+  font-size: 12px;
+  font-family: "Poppins-Regular";
+  color: black;
+  text-align: center;
+`;

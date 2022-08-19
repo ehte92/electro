@@ -1,7 +1,8 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import HeaderRight from "../components/HeaderRight";
 import ProfileScreen from "../screens/ProfileScreen";
+import colors from "../assets/theme/colors";
 
 const Stack = createStackNavigator();
 
@@ -13,11 +14,11 @@ export const ProfileStack = ({ navigation }) => {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerLeft: () => (
-          <Ionicons
+          <MaterialIcons
             name="menu"
             size={24}
             style={{
-              margin: 10,
+              margin: 14,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -26,14 +27,14 @@ export const ProfileStack = ({ navigation }) => {
         ),
         headerRight: () => <HeaderRight navigation={navigation} />,
         headerStyle: {
-          backgroundColor: "#f3e008",
+          backgroundColor: colors.accent,
           borderBottomRightRadius: 20,
           borderBottomLeftRadius: 20,
         },
         headerTitleStyle: {
-          fontWeight: "bold",
-          fontSize: 35,
-          marginLeft: 20,
+          fontFamily: "Poppins-Bold",
+          fontSize: 40,
+          marginLeft: 10,
         },
         headerTitle: "electro",
       })}

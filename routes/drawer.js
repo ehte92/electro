@@ -5,6 +5,7 @@ import { HomeStack } from "./homeStack";
 import CustomDrawer from "../components/CustomDrawer";
 import ProfileScreen from "../screens/ProfileScreen";
 import WishlistScreen from "../screens/WishlistScreen";
+import colors from "../assets/theme/colors";
 
 const Drawer = createDrawerNavigator();
 
@@ -13,12 +14,13 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator
         screenOptions={{
-          drawerActiveBackgroundColor: "#f3e008",
+          drawerActiveBackgroundColor: colors.accent,
           drawerActiveTintColor: "#000",
           drawerInactiveTintColor: "#333",
           drawerLabelStyle: {
-            marginLeft: 25,
+            marginLeft: 10,
             fontSize: 15,
+            fontFamily: "Poppins-Medium"
           },
         }}
         drawerContent={(props) => <CustomDrawer {...props} />}
@@ -41,14 +43,14 @@ export default function App() {
               <AntDesign name="user" size={22} color={color} />
             ),
             headerStyle: {
-              backgroundColor: "#f3e008",
+              backgroundColor: colors.accent,
               borderBottomRightRadius: 20,
               borderBottomLeftRadius: 20,
             },
             headerTitleStyle: {
-              fontWeight: "bold",
-              fontSize: 35,
-              marginLeft: 20,
+              fontFamily: "Poppins-Bold",
+              fontSize: 40,
+              marginLeft: 10,
             },
             headerTitle: "electro",
           }}
@@ -61,14 +63,14 @@ export default function App() {
               <AntDesign name="heart" size={22} color={color} />
             ),
             headerStyle: {
-              backgroundColor: "#f3e008",
+              backgroundColor: colors.accent,
               borderBottomRightRadius: 20,
               borderBottomLeftRadius: 20,
             },
             headerTitleStyle: {
-              fontWeight: "bold",
-              fontSize: 35,
-              marginLeft: 20,
+              fontFamily: "Poppins-Bold",
+              fontSize: 40,
+              marginLeft: 10,
             },
             headerTitle: "electro",
           }}

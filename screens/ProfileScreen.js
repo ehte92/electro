@@ -1,31 +1,61 @@
-import {
-  Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-} from "react-native";
+import styled from "@emotion/native";
+import { Dimensions, Platform } from "react-native";
+import Background from "../components/Background";
 import Button from "../components/Button";
+import Container from "../components/Container";
+
+const Image = styled.Image`
+  width: 110px;
+  height: 110px;
+  margin-bottom: 8px;
+`;
+
+const Header = styled.Text`
+  font-size: 24px;
+  font-family: "Poppins-Medium";
+  padding-vertical: 8px;
+`;
+
+const Text = styled.Text`
+  font-size: 15px;
+  font-family: "Poppins-Regular";
+  line-height: 21px;
+  text-align: center;
+  margin-bottom: 12px;
+`;
+
+const isIphoneX = () => {
+  const { height, width } = Dimensions.get("window");
+  return (
+    Platform.OS === "ios" &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    (height === 812 || width === 812)
+  );
+};
 
 export default function ProfileScreen({ navigation }) {
   return (
-    <ImageBackground
-      source={require("../assets/images/background_dot.png")}
-      resizeMode="repeat"
-      style={styles.background}
-    >
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <Image
-          source={require("../assets/images/login_logo.png")}
-          style={styles.image}
-        />
-        <Text style={styles.header}>Get Started</Text>
-        <Text style={styles.text}>
+    <Background>
+      <Container
+        style={{
+          marginTop: isIphoneX() ? 88 : 64,
+        }}
+      >
+        <Image source={require("../assets/images/login_logo.png")} />
+        <Header>Get Started</Header>
+        <Text>
           Hello there! Sign in to your account or sign up to get started.
         </Text>
         <Button
           title="LOGIN"
           type="filled"
+          style={{
+            shadowOffset: { width: 10, height: 10 },
+            shadowColor: "black",
+            shadowOpacity: 1,
+            elevation: 3,
+          }}
           onPress={() => navigation.navigate("Login")}
         />
         <Button
@@ -33,39 +63,7 @@ export default function ProfileScreen({ navigation }) {
           type="outlined"
           onPress={() => navigation.navigate("Signup")}
         />
-      </KeyboardAvoidingView>
-    </ImageBackground>
+      </Container>
+    </Background>
   );
 }
-
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: "100%",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    width: "100%",
-    maxWidth: 340,
-    alignSelf: "center",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: 110,
-    height: 110,
-    marginBottom: 8,
-  },
-  header: {
-    fontSize: 21,
-    fontWeight: "bold",
-    paddingVertical: 12,
-  },
-  text: {
-    fontSize: 15,
-    lineHeight: 21,
-    textAlign: "center",
-    marginBottom: 12,
-  },
-});

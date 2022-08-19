@@ -27,7 +27,7 @@ export default function CustomDrawer(props) {
               marginBottom: 10,
             }}
           />
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>John Doe</Text>
+          <Text style={{ fontSize: 20, fontFamily: "Poppins-Bold" }}>John Doe</Text>
         </ImageBackground>
         <View
           style={{
@@ -54,7 +54,15 @@ export default function CustomDrawer(props) {
             }}
           >
             <AntDesign name="sharealt" size={22} />
-            <Text style={{ marginLeft: 5, fontSize: 15 }}>Tell a friend</Text>
+            <Text
+              style={{
+                marginLeft: 5,
+                fontSize: 15,
+                fontFamily: "Poppins-Regular",
+              }}
+            >
+              Tell a friend
+            </Text>
           </View>
         </Pressable>
         <Pressable onPress={() => {}} style={{ paddingVertical: 15 }}>
@@ -65,7 +73,15 @@ export default function CustomDrawer(props) {
             }}
           >
             <AntDesign name="logout" size={22} />
-            <Text style={{ marginLeft: 5, fontSize: 15 }}>Sign Out</Text>
+            <Text
+              style={{
+                marginLeft: 5,
+                fontSize: 15,
+                fontFamily: "Poppins-Regular",
+              }}
+            >
+              Sign Out
+            </Text>
           </View>
         </Pressable>
       </View>

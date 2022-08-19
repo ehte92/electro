@@ -5,12 +5,12 @@ import {
   Text,
   View,
 } from "react-native";
-import { color } from "react-native-reanimated";
 import colors from "../assets/theme/colors";
 
 export default function Button({
   title,
   type,
+  icon,
   disabled,
   danger,
   loading,
@@ -45,11 +45,20 @@ export default function Button({
         <View style={[styles.loaderSection]}>
           {loading && (
             <ActivityIndicator
-              color={type === "outlined" ? colors.primary : colors.secondary}
+              color={type === "outlined" ? colors.accent : colors.secondary}
             />
           )}
+          {icon && <View style={styles.iconSection}>{icon}</View>}
           {title && (
-            <Text style={[styles.text, { paddingLeft: loading ? 5 : 0 }]}>
+            <Text
+              style={[
+                styles.text,
+                {
+                  paddingLeft: loading ? 5 : 0,
+                  color: type === "outlined" ? colors.black : colors.white,
+                },
+              ]}
+            >
               {loading ? "Please wait..." : title}
             </Text>
           )}
@@ -77,17 +86,20 @@ const styles = StyleSheet.create({
   loaderSection: {
     flexDirection: "row",
   },
+  iconSection: {
+    marginRight: 10,
+  },
   text: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Medium",
     fontSize: 15,
     lineHeight: 26,
   },
   outlined: {
-    borderColor: colors.primary,
+    borderColor: colors.accent,
     borderWidth: 1,
   },
   filled: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
   },
   disabled: {
     backgroundColor: colors.grey,

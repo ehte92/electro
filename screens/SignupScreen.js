@@ -1,8 +1,7 @@
 import { useState } from "react";
 import {
-  Image,
-  ImageBackground,
-  KeyboardAvoidingView,
+  Dimensions,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -16,6 +15,19 @@ import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
 import Button from "../components/Button";
 import colors from "../assets/theme/colors";
+import Background from "../components/Background";
+import Container from "../components/Container";
+import styled from "@emotion/native";
+
+const isIphoneX = () => {
+  const { height, width } = Dimensions.get("window");
+  return (
+    Platform.OS === "ios" &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    (height === 812 || width === 812)
+  );
+};
 
 export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -42,18 +54,15 @@ export default function SignupScreen({ navigation }) {
     }
   };
   return (
-    <ImageBackground
-      source={require("../assets/images/background_dot.png")}
-      resizeMode="repeat"
-      style={styles.background}
-    >
+    <Background>
       <ScrollView>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <Image
-            source={require("../assets/images/login_logo.png")}
-            style={styles.image}
-          />
-          <Text style={styles.header}>Create Account</Text>
+        <Container
+          style={{
+            marginTop: isIphoneX() ? 88 : 64,
+          }}
+        >
+          <Image source={require("../assets/images/login_logo.png")} />
+          <Header>Create Account</Header>
           <TextInput
             label="Email"
             iconPosition="left"
@@ -120,48 +129,35 @@ export default function SignupScreen({ navigation }) {
             returnKeyType="done"
           />
           <Button title="Sign Up" type="filled" onPress={onSignupPressed} />
-          <View style={styles.row}>
-            <Text>Already have an account? </Text>
+          <Row>
+            <Text style={{
+              fontFamily: "Poppins-Regular",
+            }}>Already have an account? </Text>
             <Pressable onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.link}>Login</Text>
+              <Link>Login</Link>
             </Pressable>
-          </View>
-        </KeyboardAvoidingView>
+          </Row>
+        </Container>
       </ScrollView>
-    </ImageBackground>
+    </Background>
   );
 }
 
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: "100%",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    width: "100%",
-    maxWidth: 340,
-    alignSelf: "center",
-    alignItems: "center",
-    //justifyContent: "center",
-  },
-  image: {
-    width: 110,
-    height: 110,
-    marginBottom: 8,
-  },
-  header: {
-    fontSize: 21,
-    fontWeight: "bold",
-    paddingVertical: 12,
-  },
-  row: {
-    flexDirection: "row",
-    marginTop: 4,
-  },
-  link: {
-    fontWeight: "bold",
-    color: colors.primary,
-  },
-});
+const Image = styled.Image`
+  width: 110px;
+  height: 110px;
+  margin-bottom: 8px;
+`;
+const Header = styled.Text`
+  font-size: 24px;
+  font-family: "Poppins-Medium"
+  padding-vertical: 12px;
+`;
+const Row = styled.View`
+  flex-direction: row;
+  margin-top: 4px;
+`;
+const Link = styled.Text`
+  font-family: "Poppins-Medium"
+  color: ${colors.primary};
+`;

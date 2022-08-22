@@ -8,19 +8,28 @@ import CarouselCardItem, {
   sliderWidth,
 } from "../components/CarouselCardItem";
 import PaginationItem from "../components/PaginationItem";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import IconButton from "../components/IconButton";
-import { Box, Button, FlatList, Icon, ScrollView, Text } from "native-base";
+import { Box, Button, FlatList, Icon, Modal, Text } from "native-base";
+import { ScrollView } from "react-native-gesture-handler";
+import TabItem from "../components/TabItem";
+import GalleryView from "../components/GalleryView";
 
 const { width, height } = Dimensions.get("screen");
 
 export default function ProductDetailsScreen({ navigation, route }) {
   const [quantity, setQuantity] = useState(1);
   const [addToCartButtonPressed, setAddToCartButtonPressed] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+  const flatListRef = useRef(null);
   const { item } = route.params;
   const progressValue = useSharedValue(0);
   const regex = /(<([^>]+)>)/gi;
   const data = [
+    {
+      imgUrl: item.images[0],
+    },
     {
       imgUrl: item.images[0],
     },
@@ -42,6 +51,9 @@ export default function ProductDetailsScreen({ navigation, route }) {
         "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.",
     },
   ];
+  const onPress = () => {
+    setOpenModal(true);
+  };
   return (
     <ScrollView
       horizontal={false}
@@ -70,7 +82,7 @@ export default function ProductDetailsScreen({ navigation, route }) {
             data={data}
             keyExtractor={(_, index) => index.toString()}
             renderItem={({ item, index }) => (
-              <CarouselCardItem item={item} index={index} />
+              <CarouselCardItem item={item} index={index} onPress={onPress} />
             )}
             horizontal
             pagingEnabled
@@ -223,6 +235,71 @@ export default function ProductDetailsScreen({ navigation, route }) {
           </Button>
         </Box>
       </Box>
+      <Box>
+        <Box>
+          <Button.Group
+            isAttached
+            variant="unstyled"
+            space={0}
+            alignSelf="center"
+            width="90%"
+          >
+            {tabData.map((item, index) => {
+              return (
+                <Button
+                  key={index}
+                  width="50%"
+                  _text={{
+                    color: "black",
+                    fontFamily: "heading",
+                    fontWeight: 700,
+                    fontSize: "md",
+                    lineHeight: "lg",
+                  }}
+                  borderBottomWidth={2}
+                  borderBottomColor={
+                    index === activeTab ? "primary.300" : "white"
+                  }
+                  _pressed={{
+                    bg: "primary.300",
+                  }}
+                  onPress={() => {
+                    setActiveTab(index);
+                    flatListRef.current.scrollToIndex({
+                      animated: true,
+                      index: index,
+                    });
+                  }}
+                >
+                  {item.title}
+                </Button>
+              );
+            })}
+          </Button.Group>
+          <FlatList
+            ref={flatListRef}
+            data={tabData}
+            keyExtractor={(_, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <TabItem item={item} index={index} />
+            )}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={({ nativeEvent }) => {
+              setActiveTab(nativeEvent.contentOffset.x / width);
+            }}
+          />
+        </Box>
+      </Box>
+      <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Content width={width}>
+          <Modal.CloseButton />
+          <Modal.Body>
+            <GalleryView item={data} />
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </ScrollView>
   );
 }

@@ -1,33 +1,21 @@
 import { useState } from "react";
-import {
-  Dimensions,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import TextInput from "../components/TextInput";
 import { confirmPasswordValidator } from "../helpers/confirmPasswordValidator";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
-import Button from "../components/Button";
-import colors from "../assets/theme/colors";
 import Background from "../components/Background";
 import Container from "../components/Container";
-import styled from "@emotion/native";
-
-const isIphoneX = () => {
-  const { height, width } = Dimensions.get("window");
-  return (
-    Platform.OS === "ios" &&
-    !Platform.isPad &&
-    !Platform.isTVOS &&
-    (height === 812 || width === 812)
-  );
-};
+import {
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+} from "native-base";
 
 export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -56,19 +44,19 @@ export default function SignupScreen({ navigation }) {
   return (
     <Background>
       <ScrollView>
-        <Container
-          style={{
-            marginTop: isIphoneX() ? 88 : 64,
-          }}
-        >
-          <Image source={require("../assets/images/login_logo.png")} />
-          <Header>Create Account</Header>
+        <Container>
+          <Image
+            source={require("../assets/images/login_logo.png")}
+            size="xl"
+            alt="logo"
+          />
+          <Heading fontSize={24} fontFamily="heading" fontWeight={600} py={4}>
+            Welcome back
+          </Heading>
           <TextInput
-            label="Email"
+            label="Username or Email"
             iconPosition="left"
-            icon={
-              <MaterialIcons name="alternate-email" size={24} color="black" />
-            }
+            icon={<MaterialIcons name="alternate-email" />}
             placeholder="Enter Email"
             value={email.value || ""}
             error={email.error}
@@ -82,40 +70,33 @@ export default function SignupScreen({ navigation }) {
             label="Password"
             iconPosition="right"
             icon={
-              <Pressable
-                onPress={() => {
-                  setIsSecureEntry((prev) => !prev);
-                }}
-              >
-                {isSecureEntry ? (
-                  <Ionicons name="eye" size={24} color="black" />
-                ) : (
-                  <Ionicons name="eye-off" size={24} color="black" />
-                )}
+              <Pressable onPress={() => setIsSecureEntry(!isSecureEntry)}>
+                <Icon
+                  as={<Ionicons name={isSecureEntry ? "eye" : "eye-off"} />}
+                  size={5}
+                  mr="2"
+                  color="black"
+                />
               </Pressable>
             }
             placeholder="Enter Password"
             value={password.value || ""}
             error={password.error}
             onChangeText={(value) => setPassword({ value: value, error: "" })}
-            autoCapitalize="none"
-            secureTextEntry={isSecureEntry}
+            type={isSecureEntry ? "password" : "text"}
             returnKeyType="next"
           />
           <TextInput
-            label="Confirm Password"
+            label="Re-enter Password"
             iconPosition="right"
             icon={
-              <Pressable
-                onPress={() => {
-                  setIsSecureEntry2((prev) => !prev);
-                }}
-              >
-                {isSecureEntry2 ? (
-                  <Ionicons name="eye" size={24} color="black" />
-                ) : (
-                  <Ionicons name="eye-off" size={24} color="black" />
-                )}
+              <Pressable onPress={() => setIsSecureEntry2(!isSecureEntry2)}>
+                <Icon
+                  as={<Ionicons name={isSecureEntry2 ? "eye" : "eye-off"} />}
+                  size={5}
+                  mr="2"
+                  color="black"
+                />
               </Pressable>
             }
             placeholder="Confirm Password"
@@ -124,40 +105,38 @@ export default function SignupScreen({ navigation }) {
             onChangeText={(value) =>
               setConfirmPassword({ value: value, error: "" })
             }
-            autoCapitalize="none"
-            secureTextEntry={isSecureEntry2}
+            type={isSecureEntry2 ? "password" : "text"}
             returnKeyType="done"
           />
-          <Button title="Sign Up" type="filled" onPress={onSignupPressed} />
-          <Row>
-            <Text style={{
-              fontFamily: "Poppins-Regular",
-            }}>Already have an account? </Text>
+          <Button
+            width="100%"
+            borderRadius={20}
+            bg="primary.300"
+            shadow={3}
+            marginBottom={8}
+            _text={{
+              color: "white",
+              fontFamily: "heading",
+              fontWeight: 700,
+              fontSize: "md",
+              lineHeight: "lg",
+            }}
+            onPress={onSignupPressed}
+          >
+            SIGN UP
+          </Button>
+          <Box flexDirection="row">
+            <Text fontFamily="body" fontWeight={400}>
+              Already have an account?{" "}
+            </Text>
             <Pressable onPress={() => navigation.navigate("Login")}>
-              <Link>Login</Link>
+              <Text fontFamily="body" fontWeight={400} color="primary.300">
+                Login
+              </Text>
             </Pressable>
-          </Row>
+          </Box>
         </Container>
       </ScrollView>
     </Background>
   );
 }
-
-const Image = styled.Image`
-  width: 110px;
-  height: 110px;
-  margin-bottom: 8px;
-`;
-const Header = styled.Text`
-  font-size: 24px;
-  font-family: "Poppins-Medium"
-  padding-vertical: 12px;
-`;
-const Row = styled.View`
-  flex-direction: row;
-  margin-top: 4px;
-`;
-const Link = styled.Text`
-  font-family: "Poppins-Medium"
-  color: ${colors.primary};
-`;

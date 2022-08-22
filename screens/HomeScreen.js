@@ -1,5 +1,5 @@
+import { FlatList } from "native-base";
 import { useEffect, useState } from "react";
-import { FlatList } from "react-native";
 import Background from "../components/Background";
 import ProductCard from "../components/ProductCard";
 

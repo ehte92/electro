@@ -1,5 +1,5 @@
+import { Box, Icon, Input, Text } from "native-base";
 import { useState } from "react";
-import { View, TextInput as Input, Text, StyleSheet } from "react-native";
 import colors from "../assets/theme/colors";
 
 export default function TextInput({
@@ -15,39 +15,43 @@ export default function TextInput({
 }) {
   const [focused, setFocused] = useState(false);
 
-  const getFlexDirection = () => {
-    if (icon && iconPosition) {
-      if (iconPosition === "left") {
-        return "row";
-      } else if (iconPosition === "right") {
-        return "row-reverse";
-      }
-    }
-  };
   const getBorderColor = () => {
     if (error) {
-      return colors.danger;
+      return "danger500";
     }
 
     if (focused) {
-      return colors.primary;
+      return "primary300";
     } else {
-      return colors.grey;
+      return "muted400";
     }
   };
   return (
-    <View style={styles.inputContainer}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <View
-        style={[
-          styles.wrapper,
-          { alignItems: icon ? "center" : "baseline" },
-          { borderColor: getBorderColor(), flexDirection: getFlexDirection() },
-        ]}
-      >
-        <View style={styles.icon}>{icon && icon}</View>
+    <Box width="100%">
+      {label && (
+        <Text fontSize={"sm"} fontFamily="body" fontWeight={500} mb={1}>
+          {label}
+        </Text>
+      )}
+      <Box>
         <Input
-          style={[styles.textInput, style]}
+          variant="rounded"
+          leftElement={
+            icon &&
+            iconPosition === "left" && (
+              <Icon as={icon} size={5} ml={2} color="black" />
+            )
+          }
+          rightElement={
+            icon &&
+            iconPosition === "right" && (
+              <Icon as={icon} size={5} mr={2} color="black" />
+            )
+          }
+          borderColor={
+            error ? colors.danger : focused ? colors.accent : colors.grey
+          }
+          borderWidth={2}
           onChangeText={onChangeText}
           value={value}
           onFocus={() => {
@@ -56,46 +60,22 @@ export default function TextInput({
           onBlur={() => {
             setFocused(false);
           }}
-          selectionColor="#f3e008"
+          selectionColor={colors.accent}
           underlineColorAndroid={"transparent"}
           {...props}
         />
-      </View>
-      {error && <Text style={styles.error}>{error}</Text>}
-    </View>
+      </Box>
+      {error && (
+        <Text
+          fontSize={"sm"}
+          fontFamily="body"
+          fontWeight={500}
+          pt={1}
+          color={colors.danger}
+        >
+          {error}
+        </Text>
+      )}
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  inputContainer: {
-    paddingVertical: 12,
-    width: "100%",
-  },
-  wrapper: {
-    height: 42,
-    borderWidth: 2,
-    borderRadius: 20,
-    paddingHorizontal: 5,
-    marginTop: 5,
-  },
-  icon: {
-    marginRight: 5,
-  },
-  label: {
-    fontSize: 15,
-    fontFamily: "Poppins-Medium",
-    marginBottom: 4,
-  },
-  textInput: {
-    flex: 1,
-    width: "100%",
-    fontSize: 15,
-    fontFamily: "Poppins-Regular"
-  },
-  error: {
-    fontSize: 13,
-    fontFamily: "Poppins-Regular",
-    color: colors.danger,
-    paddingTop: 4,
-  },
-});

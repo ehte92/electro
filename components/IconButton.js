@@ -1,37 +1,32 @@
 import { AntDesign } from "@expo/vector-icons";
-import { Pressable, StyleSheet, View } from "react-native";
-import colors from "../assets/theme/colors";
+import { Box, Icon, Pressable } from "native-base";
 
 export default function IconButton({ name, color, size, onPress, style }) {
   return (
-    <View style={[styles.container, style]}>
+    <Box
+      alignSelf={"center"}
+      justifyContent={"center"}
+      my={2}
+      rounded={"full"}
+      shadow={3}
+    >
       <Pressable
+        paddingBottom={1}
         android_ripple={{
-          color: colors.grey,
+          color: "muted.400",
           borderless: true,
         }}
-        style={styles.button}
         onPress={onPress}
       >
-        <AntDesign name={name} size={size} color={color} />
+        <Icon
+          as={AntDesign}
+          name={name}
+          color={color}
+          size={size}
+          bg="white"
+          rounded="full"
+        />
       </Pressable>
-    </View>
+    </Box>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignSelf: "center",
-    justifyContent: "center",
-    marginVertical: 10,
-    borderRadius: 50,
-    shadowOffset: { width: 10, height: 10 },
-    shadowColor: "black",
-    shadowOpacity: 1,
-    borderRadius: 30,
-  },
-  button: {
-    paddingRight: 2,
-    paddingBottom: 2,
-  },
-});

@@ -1,68 +1,64 @@
-import styled from "@emotion/native";
-import { Dimensions, Platform } from "react-native";
+import { Button, Heading, Image, Text } from "native-base";
 import Background from "../components/Background";
-import Button from "../components/Button";
 import Container from "../components/Container";
-
-const Image = styled.Image`
-  width: 110px;
-  height: 110px;
-  margin-bottom: 8px;
-`;
-
-const Header = styled.Text`
-  font-size: 24px;
-  font-family: "Poppins-Medium";
-  padding-vertical: 8px;
-`;
-
-const Text = styled.Text`
-  font-size: 15px;
-  font-family: "Poppins-Regular";
-  line-height: 21px;
-  text-align: center;
-  margin-bottom: 12px;
-`;
-
-const isIphoneX = () => {
-  const { height, width } = Dimensions.get("window");
-  return (
-    Platform.OS === "ios" &&
-    !Platform.isPad &&
-    !Platform.isTVOS &&
-    (height === 812 || width === 812)
-  );
-};
 
 export default function ProfileScreen({ navigation }) {
   return (
     <Background>
-      <Container
-        style={{
-          marginTop: isIphoneX() ? 88 : 64,
-        }}
-      >
-        <Image source={require("../assets/images/login_logo.png")} />
-        <Header>Get Started</Header>
-        <Text>
+      <Container>
+        <Image
+          source={require("../assets/images/login_logo.png")}
+          size="xl"
+          mt="8"
+          alt="logo"
+        />
+        <Heading fontSize={24} fontFamily="heading" fontWeight={600} py={6}>
+          Get Started
+        </Heading>
+        <Text
+          fontSize="md"
+          fontFamily="body"
+          fontWeight={400}
+          lineHeight="md"
+          textAlign="center"
+          mb={8}
+        >
           Hello there! Sign in to your account or sign up to get started.
         </Text>
         <Button
-          title="LOGIN"
-          type="filled"
-          style={{
-            shadowOffset: { width: 10, height: 10 },
-            shadowColor: "black",
-            shadowOpacity: 1,
-            elevation: 3,
+          width="100%"
+          borderRadius={20}
+          bg="primary.300"
+          shadow={3}
+          marginBottom={8}
+          _text={{
+            color: "white",
+            fontFamily: "heading",
+            fontWeight: 700,
+            fontSize: "md",
+            lineHeight: "lg",
           }}
           onPress={() => navigation.navigate("Login")}
-        />
+        >
+          LOGIN
+        </Button>
         <Button
-          title="SIGN UP"
-          type="outlined"
+          width="100%"
+          borderRadius={20}
+          variant="outline"
+          borderColor="primary.300"
+          borderWidth={2}
+          _text={{
+            color: "primary.300",
+            fontFamily: "heading",
+            fontWeight: 700,
+            fontSize: "md",
+            lineHeight: "lg",
+          }}
           onPress={() => navigation.navigate("Signup")}
-        />
+        >
+          SIGN UP
+        </Button>
       </Container>
     </Background>
   );

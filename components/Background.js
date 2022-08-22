@@ -1,18 +1,9 @@
-import styled from "@emotion/native";
+import { Box } from "native-base";
 
 export default function Background({ children, ...props }) {
   return (
-    <BackgroundComponent
-      source={require("../assets/images/background_dot.png")}
-      resizeMode="repeat"
-      {...props}
-    >
+    <Box flex="1" width="100%" bg="transparent" {...props}>
       {children}
-    </BackgroundComponent>
+    </Box>
   );
 }
-
-const BackgroundComponent = styled.ImageBackground`
-  flex: 1;
-  width: 100%;
-`;

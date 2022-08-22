@@ -1,10 +1,5 @@
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Box, Spinner, Text } from "native-base";
+import { Pressable, StyleSheet, View } from "react-native";
 import colors from "../assets/theme/colors";
 
 export default function Button({
@@ -42,27 +37,21 @@ export default function Button({
           borderless: true,
         }}
       >
-        <View style={[styles.loaderSection]}>
-          {loading && (
-            <ActivityIndicator
-              color={type === "outlined" ? colors.accent : colors.secondary}
-            />
-          )}
-          {icon && <View style={styles.iconSection}>{icon}</View>}
+        <Box flexDir="row">
+          {loading && <Spinner color={type === "filled" ? "white" : "black"} />}
+          {icon && <Box mr={2}>{icon}</Box>}
           {title && (
             <Text
-              style={[
-                styles.text,
-                {
-                  paddingLeft: loading ? 5 : 0,
-                  color: type === "outlined" ? colors.black : colors.white,
-                },
-              ]}
+              fontFamily="Poppins-Medium"
+              fontSize="md"
+              lineHeight="lg"
+              pl={loading ? 5 : 0}
+              color={type === "outlined" ? "black" : "white"}
             >
               {loading ? "Please wait..." : title}
             </Text>
           )}
-        </View>
+        </Box>
       </Pressable>
     </View>
   );
@@ -82,17 +71,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingVertical: 10,
-  },
-  loaderSection: {
-    flexDirection: "row",
-  },
-  iconSection: {
-    marginRight: 10,
-  },
-  text: {
-    fontFamily: "Poppins-Medium",
-    fontSize: 15,
-    lineHeight: 26,
   },
   outlined: {
     borderColor: colors.accent,

@@ -2,21 +2,9 @@ import { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import TextInput from "../components/TextInput";
 import { emailValidator } from "../helpers/emailValidator";
-import Button from "../components/Button";
 import Background from "../components/Background";
 import Container from "../components/Container";
-import styled from "@emotion/native";
-import { Dimensions, Platform } from "react-native";
-
-const isIphoneX = () => {
-  const { height, width } = Dimensions.get("window");
-  return (
-    Platform.OS === "ios" &&
-    !Platform.isPad &&
-    !Platform.isTVOS &&
-    (height === 812 || width === 812)
-  );
-};
+import { Button, Heading, Image, Text } from "native-base";
 
 export default function ResetPasswordScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -31,19 +19,19 @@ export default function ResetPasswordScreen({ navigation }) {
   };
   return (
     <Background>
-      <Container
-        style={{
-          marginTop: isIphoneX() ? 88 : 64,
-        }}
-      >
-        <Image source={require("../assets/images/login_logo.png")} />
-        <Header>Restore Password</Header>
+      <Container>
+        <Image
+          source={require("../assets/images/login_logo.png")}
+          size="xl"
+          alt="logo"
+        />
+        <Heading fontSize={24} fontFamily="heading" fontWeight={600} py={4}>
+          Welcome back
+        </Heading>
         <TextInput
-          label="Email Address"
+          label="Username or Email"
           iconPosition="left"
-          icon={
-            <MaterialIcons name="alternate-email" size={24} color="black" />
-          }
+          icon={<MaterialIcons name="alternate-email" />}
           placeholder="Enter Email"
           value={email.value || ""}
           error={email.error}
@@ -51,35 +39,29 @@ export default function ResetPasswordScreen({ navigation }) {
           autoCapitalize="none"
           autoComplete="email"
           keyboardType="email-address"
-          returnKeyType="done"
+          returnKeyType="next"
         />
-        <Description>
+        <Text fontSize="xs" fontFamily="body" fontWeight="400" mb={3}>
           You will receive email with password reset link.
-        </Description>
+        </Text>
         <Button
-          title="Send Instructions"
-          type="filled"
+          width="100%"
+          borderRadius={20}
+          bg="primary.300"
+          shadow={3}
+          marginBottom={8}
+          _text={{
+            color: "white",
+            fontFamily: "heading",
+            fontWeight: 700,
+            fontSize: "md",
+            lineHeight: "lg",
+          }}
           onPress={sendResetPasswordEmail}
-          style={{ marginTop: 16 }}
-        />
+        >
+          Send Instructions
+        </Button>
       </Container>
     </Background>
   );
 }
-
-const Image = styled.Image`
-  width: 110px;
-  height: 110px;
-  margin-bottom: 8px;
-`;
-const Header = styled.Text`
-  font-size: 24px;
-  font-family: "Poppins-Medium";
-  padding-vertical: 12px;
-`;
-const Description = styled.Text`
-  font-size: 12px;
-  font-family: "Poppins-Regular";
-  color: black;
-  text-align: center;
-`;

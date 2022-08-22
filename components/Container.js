@@ -1,18 +1,17 @@
-import styled from "@emotion/native";
+import { KeyboardAvoidingView } from "native-base";
 
 export default function Container({ children, ...props }) {
   return (
-    <ContainerComponent behavior="padding" {...props}>
+    <KeyboardAvoidingView
+      flex="1"
+      px="10"
+      py="20"
+      width="100%"
+      alignSelf="center"
+      alignItems="center"
+      {...props}
+    >
       {children}
-    </ContainerComponent>
+    </KeyboardAvoidingView>
   );
 }
-
-const ContainerComponent = styled.KeyboardAvoidingView`
-  flex: 1;
-  padding: 20px;
-  width: 100%;
-  max-width: 340px;
-  align-self: center;
-  align-items: center;
-`;

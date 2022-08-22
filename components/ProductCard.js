@@ -1,5 +1,4 @@
-import styled from "@emotion/native";
-import colors from "../assets/theme/colors";
+import { Box, Heading, Image, Pressable, Text } from "native-base";
 
 export default function ProductCard({
   name,
@@ -9,74 +8,54 @@ export default function ProductCard({
   onPress,
 }) {
   return (
-    <Container>
-      <Button
+    <Box flex={1} margin={2} rounded="lg" shadow={4} bg="white">
+      <Pressable
+        flex={1}
         onPress={onPress}
         android_ripple={{
-          color: colors.grey,
+          color: "muted.300",
           borderless: true,
         }}
       >
-        <InnerContainer>
-          <Text>{category}</Text>
-          <Header>{name}</Header>
+        <Box flex={1} p={2} m={2} justifyContent="center" alignItems="center">
+          <Text
+            fontSize="sm"
+            fontFamily="body"
+            fontWeight={300}
+            color="muted.400"
+            alignSelf="flex-start"
+          >
+            {category}
+          </Text>
+          <Heading
+            fontSize="lg"
+            fontFamily="heading"
+            fontWeight={600}
+            color="darkBlue.500"
+            alignSelf="flex-start"
+            mb={2}
+          >
+            {name}
+          </Heading>
           <Image
             source={{
               uri: imageSource,
             }}
+            size="xl"
+            alt={name}
+            mb={2}
+            rounded="lg"
           />
-          <Price>{price}</Price>
-        </InnerContainer>
-      </Button>
-    </Container>
+          <Text
+            fontSize="lg"
+            fontFamily="body"
+            fontWeight={600}
+            alignSelf="flex-start"
+          >
+            {price}
+          </Text>
+        </Box>
+      </Pressable>
+    </Box>
   );
 }
-
-const Container = styled.View`
-  flex: 1;
-  margin-vertical: 4px;
-  margin-horizontal: 10px;
-  border-radius: 8px;
-  elevation: 4;
-  background-color: white;
-  overflow: hidden;
-`;
-const Button = styled.Pressable`
-  flex: 1;
-`;
-
-const InnerContainer = styled.View`
-  flex: 1;
-  padding: 8px;
-  margin: 8px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Image = styled.Image`
-  width: 110px;
-  height: 110px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-`;
-
-const Header = styled.Text`
-  font-size: 16px;
-  font-family: "Poppins-Medium";
-  color: ${colors.secondary};
-  margin-bottom: 8px;
-  align-self: flex-start;
-`;
-
-const Text = styled.Text`
-  font-size: 15px;
-  font-family: "Poppins-Regular";
-  align-self: flex-start;
-  color: ${colors.grey};
-`;
-
-const Price = styled.Text`
-  font-size: 18px;
-  font-family: "Poppins-Medium";
-  align-self: flex-start;
-`;

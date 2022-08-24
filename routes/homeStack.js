@@ -10,6 +10,7 @@ import SignupScreen from "../screens/SignupScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 import ProductDetailsScreen from "../screens/ProductDetailsScreen";
 import colors from "../assets/theme/colors";
+import FilterScreen from "../screens/FilterScreen";
 
 const Stack = createStackNavigator();
 
@@ -55,6 +56,13 @@ export const HomeStack = ({ navigation }) => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="ForgotPassword" component={ResetPasswordScreen} />
+      <Stack.Screen
+        name="Filter"
+        component={FilterScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };

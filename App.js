@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { extendTheme, NativeBaseProvider } from "native-base";
 import Navigator from "./routes/drawer";
 import { View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -79,13 +80,43 @@ export default function App() {
   const onFontsLoaded = useCallback(() => {
     setFontLoaded(true);
   }, []);
+  // useEffect(() => {
+  //   getFonts().then(onFontsLoaded);
+  //   SplashScreen.hideAsync();
+  // }, []);
+
   useEffect(() => {
-    SplashScreen.hideAsync();
-    getFonts().then(onFontsLoaded);
+    async function loadFonts() {
+      await Font.loadAsync({
+        "Poppins-Thin": require("./assets/fonts/Poppins-Thin.ttf"),
+        "Poppins-Light": require("./assets/fonts/Poppins-Light.ttf"),
+        "Poppins-ExtraLight": require("./assets/fonts/Poppins-ExtraLight.ttf"),
+        "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
+        "Poppins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
+        "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
+        "Poppins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
+        "Poppins-ExtraBold": require("./assets/fonts/Poppins-ExtraBold.ttf"),
+        "Poppins-Black": require("./assets/fonts/Poppins-Black.ttf"),
+      })
+        .then((res) => {
+          console.log("FONTS LOADED");
+          setFontLoaded(true);
+          SplashScreen.hideAsync();
+        })
+        .catch((err) => {
+          setFontLoaded(false);
+          console.log(err);
+        });
+    }
+    loadFonts();
   }, []);
+
   return (
     <NativeBaseProvider theme={theme}>
-      <View style={{ flex: 1 }}>{fontLoaded && <Navigator />}</View>
+      <View style={{ flex: 1 }}>
+        <StatusBar backgroundColor="#f9d000" />
+        {fontLoaded && <Navigator />}
+      </View>
     </NativeBaseProvider>
   );
 }

@@ -1,4 +1,9 @@
 import "react-native-gesture-handler";
+if (__DEV__) {
+  import("./helpers/ReactotronConfig").then(() =>
+    console.log("Reactotron Configured")
+  );
+}
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";

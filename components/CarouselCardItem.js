@@ -12,7 +12,7 @@ export default function CarouselCardItem({ item, onPress, index }) {
     <Center width={width} key={index}>
       <Pressable onPress={onPress}>
         <Image
-          source={{ uri: item.imgUrl }}
+          source={{ uri: item }}
           width={imageW}
           height={imageH}
           rounded="lg"

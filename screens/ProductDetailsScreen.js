@@ -1,19 +1,18 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Dimensions, StyleSheet } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
+import { Dimensions, Modal, StyleSheet } from "react-native";
 import colors from "../assets/theme/colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import CarouselCardItem, {
   sliderHeight,
   sliderWidth,
 } from "../components/CarouselCardItem";
-import PaginationItem from "../components/PaginationItem";
 import { useRef, useState } from "react";
 import IconButton from "../components/IconButton";
-import { Box, Button, FlatList, Icon, Modal, Text } from "native-base";
+import { Box, Button, FlatList, Icon, Text } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import TabItem from "../components/TabItem";
-import GalleryView from "../components/GalleryView";
+import SwiperFlatList from "react-native-swiper-flatlist";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -24,22 +23,11 @@ export default function ProductDetailsScreen({ navigation, route }) {
   const [openModal, setOpenModal] = useState(false);
   const flatListRef = useRef(null);
   const { item } = route.params;
-  const progressValue = useSharedValue(0);
   const regex = /(<([^>]+)>)/gi;
-  const data = [
-    {
-      imgUrl: item.images[0],
-    },
-    {
-      imgUrl: item.images[0],
-    },
-    {
-      imgUrl: item.images[0],
-    },
-    {
-      imgUrl: item.images[0],
-    },
-  ];
+  const data = item.images;
+  const galleryData = data.map((image) => ({
+    url: image,
+  }));
   const tabData = [
     {
       title: "Description",
@@ -72,49 +60,31 @@ export default function ProductDetailsScreen({ navigation, route }) {
           colors={["#f5f5f5", colors.grey]}
           style={styles.carouselGradient}
         />
-        <Box
-          flex={1}
-          transform={[{ scaleX: 0.5 }]}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <FlatList
-            data={data}
-            keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item, index }) => (
+        <SwiperFlatList
+          data={data}
+          renderItem={({ item, index }) => (
+            <Box
+              flex={1}
+              transform={[{ scaleX: 0.5 }]}
+              alignItems="center"
+              justifyContent="center"
+            >
               <CarouselCardItem item={item} index={index} onPress={onPress} />
-            )}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={({ nativeEvent }) => {
-              progressValue.value = nativeEvent.contentOffset.x / width;
-            }}
-          />
-        </Box>
-        <Box
-          flexDir={"row"}
-          justifyContent="space-between"
-          width={100}
-          alignSelf="center"
-          zIndex={1}
-          mb={5}
-          transform={[{ scaleX: 0.5 }]}
-        >
-          {data.length > 1 &&
-            data.map((item, index) => {
-              return (
-                <PaginationItem
-                  index={index}
-                  length={item.length}
-                  animValue={progressValue}
-                  isRotate={false}
-                  backgroundColor={colors.black}
-                  key={index}
-                />
-              );
-            })}
-        </Box>
+            </Box>
+          )}
+          showPagination
+          paginationStyle={{
+            justifyContent: "center",
+            width: 100,
+            alignSelf: "center",
+            paddingTop: 5,
+            transform: [{ scaleX: 0.5 }],
+          }}
+          paginationStyleItem={{
+            width: 10,
+            height: 10,
+          }}
+        />
       </Box>
       <Box mt={50} mx={30}>
         <Text fontSize="md" fontFamily="body" color="muted400">
@@ -292,13 +262,24 @@ export default function ProductDetailsScreen({ navigation, route }) {
           />
         </Box>
       </Box>
-      <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Content width={width}>
+      {/* <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Content>
           <Modal.CloseButton />
           <Modal.Body>
             <GalleryView item={data} />
           </Modal.Body>
         </Modal.Content>
+      </Modal> */}
+      <Modal
+        visible={openModal}
+        transparent={true}
+        onRequestClose={() => setOpenModal(false)}
+      >
+        <ImageViewer
+          imageUrls={galleryData}
+          enableSwipeDown={true}
+          onSwipeDown={() => setOpenModal(false)}
+        />
       </Modal>
     </ScrollView>
   );

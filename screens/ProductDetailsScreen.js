@@ -13,12 +13,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import TabItem from "../components/TabItem";
 import SwiperFlatList from "react-native-swiper-flatlist";
 import ImageViewer from "react-native-image-zoom-viewer";
+import fetcher from "../helpers/network";
 
 const { width, height } = Dimensions.get("screen");
 
 export default function ProductDetailsScreen({ navigation, route }) {
   const [quantity, setQuantity] = useState(1);
   const [addToCartButtonPressed, setAddToCartButtonPressed] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const flatListRef = useRef(null);
@@ -41,6 +43,24 @@ export default function ProductDetailsScreen({ navigation, route }) {
   ];
   const onPress = () => {
     setOpenModal(true);
+  };
+  const handleAddToCart = () => {
+    setCartLoading(true);
+    const url = `/wp-json/uruvak/v1/cart/add`;
+    const promise = fetcher();
+    promise
+      .post(url, {
+        product_id: item.id,
+        quantity: quantity,
+      })
+      .then(({ data }) => {
+        console.log(data);
+        setCartLoading(false);
+        setAddToCartButtonPressed(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <ScrollView
@@ -154,14 +174,14 @@ export default function ProductDetailsScreen({ navigation, route }) {
                   size={5}
                 />
               }
-              onPress={() => {
-                setAddToCartButtonPressed(true);
-              }}
+              onPress={handleAddToCart}
               rounded="full"
               width="100%"
               bg="primary.300"
               shadow={3}
               marginBottom={2}
+              isLoading={cartLoading}
+              isLoadingText="Adding to cart"
               _text={{
                 color: "white",
                 fontFamily: "heading",
@@ -262,14 +282,6 @@ export default function ProductDetailsScreen({ navigation, route }) {
           />
         </Box>
       </Box>
-      {/* <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Content>
-          <Modal.CloseButton />
-          <Modal.Body>
-            <GalleryView item={data} />
-          </Modal.Body>
-        </Modal.Content>
-      </Modal> */}
       <Modal
         visible={openModal}
         transparent={true}

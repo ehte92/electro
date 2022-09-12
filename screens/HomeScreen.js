@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import axios from "axios";
+import axios, { CancelToken as ICancelToken } from "axios";
 import { Box, FlatList, Icon, Input, Select, Spinner } from "native-base";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
+import { useDispatch } from "react-redux";
 import Background from "../components/Background";
 import ProductCard from "../components/ProductCard";
 import fetcher from "../helpers/network";
@@ -11,6 +12,7 @@ const { width } = Dimensions.get("window");
 const { CancelToken } = axios;
 
 export default function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [productList, setProductList] = useState([]);
   const [sortList, setSortList] = useState([]);
@@ -27,11 +29,13 @@ export default function HomeScreen({ navigation }) {
     if (currentPage === 1) {
       setLoading(true);
     }
-    const source = CancelToken.source();
     const url = `wp-json/uruvak/v1/shop/products?page=${currentPage}&order_by=${orderby}`;
+    const source = CancelToken.source();
     const promise = fetcher();
     promise
-      .get(url)
+      .get(url, {
+        cancelToken: source.token,
+      })
       .then(({ data }) => {
         setProductList((prev) => [...prev, ...data.data]);
         setSortList(data.sort);
@@ -45,6 +49,9 @@ export default function HomeScreen({ navigation }) {
           error
         );
       });
+    promise.cancel = () => {
+      source.cancel("Operation canceled by the user.");
+    };
   };
 
   const loadMoreItems = () => {
@@ -134,7 +141,7 @@ export default function HomeScreen({ navigation }) {
             return null;
           }}
           onEndReached={loadMoreItems}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.3}
         />
       )}
     </Background>

@@ -1,19 +1,140 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Input,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+} from "native-base";
+import { useEffect } from "react";
+import { Dimensions } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import Background from "../components/Background";
+import CartCard from "../components/CartCard";
+import { getAsyncCart } from "../store/cartSlice";
+
+const { width } = Dimensions.get("screen");
 
 export default function CartScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.getCart.cart.products);
+  const totalPrice = useSelector(
+    (state) => state.getCart.cart.cart_total_display
+  );
+  const totalQuantity = useSelector(
+    (state) => state.getCart.cart.total_quantity_in_cart
+  );
+  useEffect(() => {
+    dispatch(getAsyncCart());
+  }, []);
   return (
-    <View style={styles.container}>
-      <Text>Cart Screen</Text>
-      <Button title="Go to Home" onPress={() => navigation.navigate("HomeScreen")} />
-    </View>
+    <Background>
+      {cart && cart.length ? (
+        <Box flex={1}>
+          <ScrollView
+            // height={height - 200}
+            showsVerticalScrollIndicator={false}
+          >
+            <Box>
+              {cart.map((item) => {
+                return (
+                  <CartCard
+                    name={item.product_title}
+                    price={item.product_price_display}
+                    quantity={item.quantity}
+                    quantityConfig={item.qty_config}
+                    image={item.featured_src}
+                    index={item.key}
+                  />
+                );
+              })}
+            </Box>
+            <Box p={4}>
+              <KeyboardAvoidingView behavior="padding">
+                <Input
+                  placeholder="Enter Coupon Code"
+                  variant="filled"
+                  bg="white"
+                  w={width * 0.9}
+                  InputRightElement={
+                    <Button
+                      variant="solid"
+                      bg="primary.300"
+                      _text={{ color: "white" }}
+                      h="full"
+                    >
+                      Apply
+                    </Button>
+                  }
+                />
+              </KeyboardAvoidingView>
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                marginY={4}
+              >
+                <Text fontFamily="body" fontWeight="400">
+                  Subtotal ({totalQuantity} items)
+                </Text>
+                <Text fontFamily="body" fontSize="md" fontWeight="600">
+                  {totalPrice}
+                </Text>
+              </Box>
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                marginBottom={4}
+              >
+                <Text fontFamily="body" fontWeight="400">
+                  Shipping
+                </Text>
+                <Text fontFamily="body" fontSize="md" fontWeight="600">
+                  Free
+                </Text>
+              </Box>
+              <Divider my="2" />
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                marginTop={2}
+                marginBottom={4}
+              >
+                <Text fontFamily="body" fontWeight="400">
+                  Total
+                </Text>
+                <Text fontFamily="body" fontSize="md" fontWeight="600">
+                  {totalPrice}
+                </Text>
+              </Box>
+            </Box>
+          </ScrollView>
+          <Box justifyContent={"center"} alignItems={"center"}>
+            <Button
+              w="90%"
+              bg="primary.300"
+              size={"lg"}
+              _text={{ color: "white" }}
+              rounded="xl"
+              margin={2}
+              // onPress={() => navigation.navigate("Checkout")}
+            >
+              Checkout
+            </Button>
+          </Box>
+        </Box>
+      ) : (
+        <Center>
+          {/* <EmptyCart width={width - 60} height={width - 60} /> */}
+          <Text fontFamily="heading" fontsize="xl" fontWeight={500}>
+            Your cart is empty
+          </Text>
+          <Text fontFamily="body" fontsize="lg" fontWeight={400}>
+            Be sure to fill your cart with something you like
+          </Text>
+        </Center>
+      )}
+    </Background>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF",
-  },
-});

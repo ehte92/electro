@@ -1,9 +1,4 @@
 import "react-native-gesture-handler";
-if (__DEV__) {
-  import("./helpers/ReactotronConfig").then(() =>
-    console.log("Reactotron Configured")
-  );
-}
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +6,8 @@ import { extendTheme, NativeBaseProvider } from "native-base";
 import Navigator from "./routes/drawer";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -117,11 +114,13 @@ export default function App() {
   }, []);
 
   return (
-    <NativeBaseProvider theme={theme}>
-      <View style={{ flex: 1 }}>
-        <StatusBar backgroundColor="#f9d000" />
-        {fontLoaded && <Navigator />}
-      </View>
-    </NativeBaseProvider>
+    <Provider store={store}>
+      <NativeBaseProvider theme={theme}>
+        <View style={{ flex: 1 }}>
+          <StatusBar backgroundColor="#f9d000" />
+          {fontLoaded && <Navigator />}
+        </View>
+      </NativeBaseProvider>
+    </Provider>
   );
 }

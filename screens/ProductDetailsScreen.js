@@ -6,16 +6,25 @@ import CarouselCardItem, {
   sliderHeight,
   sliderWidth,
 } from "../components/CarouselCardItem";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import IconButton from "../components/IconButton";
-import { Box, Button, FlatList, Icon, Text } from "native-base";
+import {
+  Box,
+  Button,
+  FlatList,
+  Icon,
+  Text,
+  ArrowBackIcon,
+  Pressable,
+} from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import TabItem from "../components/TabItem";
 import SwiperFlatList from "react-native-swiper-flatlist";
 import ImageViewer from "react-native-image-zoom-viewer";
 import fetcher from "../helpers/network";
+import HeaderRight from "../components/HeaderRight";
 
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 export default function ProductDetailsScreen({ navigation, route }) {
   const [quantity, setQuantity] = useState(1);
@@ -55,13 +64,30 @@ export default function ProductDetailsScreen({ navigation, route }) {
       })
       .then(({ data }) => {
         console.log(data);
-        setCartLoading(false);
-        setAddToCartButtonPressed(true);
+        if (data.error_message === "Sorry, this product cannot be purchased.") {
+          alert("Sorry, this product cannot be purchased.");
+          setCartLoading(false);
+        } else {
+          setCartLoading(false);
+          setAddToCartButtonPressed(true);
+        }
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <Pressable onPress={() => navigation.goBack()}>
+          <ArrowBackIcon size="5" ml="4" mr="2" color="black" />
+        </Pressable>
+      ),
+      headerRight: () => (
+        <HeaderRight hideProfile={true} navigation={navigation} />
+      ),
+    });
+  }, []);
   return (
     <ScrollView
       horizontal={false}

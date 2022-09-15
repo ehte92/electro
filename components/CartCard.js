@@ -30,7 +30,7 @@ export default function CartCard({
       quantity: quantityCart,
     };
     dispatch(updateAsyncCart(data));
-    dispatch(getAsyncCart());
+    // dispatch(getAsyncCart());
   };
   const removeItemFromCart = () => {
     const data = {

@@ -3,7 +3,6 @@ import axios, { CancelToken as ICancelToken } from "axios";
 import { Box, FlatList, Icon, Input, Select, Spinner } from "native-base";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
-import { useDispatch } from "react-redux";
 import Background from "../components/Background";
 import ProductCard from "../components/ProductCard";
 import fetcher from "../helpers/network";
@@ -12,7 +11,6 @@ const { width } = Dimensions.get("window");
 const { CancelToken } = axios;
 
 export default function HomeScreen({ navigation }) {
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [productList, setProductList] = useState([]);
   const [sortList, setSortList] = useState([]);
@@ -82,7 +80,7 @@ export default function HomeScreen({ navigation }) {
         <Select
           defaultValue="popularity"
           marginX={2}
-          height={9}
+          height={10}
           width={width - 60}
           minWidth="200"
           borderWidth={0}

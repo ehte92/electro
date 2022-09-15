@@ -1,4 +1,4 @@
-import { Box, FlatList, Icon, Image, useAccessibleColors } from "native-base";
+import { Box, FlatList, Icon, Image } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { useRef, useState } from "react";
 import { Dimensions } from "react-native";

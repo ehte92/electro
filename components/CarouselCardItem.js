@@ -1,7 +1,7 @@
-import { Center, Image, Modal, Pressable } from "native-base";
+import { Center, Image, Pressable } from "native-base";
 import { Dimensions } from "react-native";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const imageW = width * 0.5;
 const imageH = imageW * 1.2;
 export const sliderWidth = width;

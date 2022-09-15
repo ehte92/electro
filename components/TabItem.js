@@ -1,7 +1,7 @@
 import { Box, Text } from "native-base";
 import { Dimensions } from "react-native";
 
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 export default function TabItem({ item, index }) {
   return (

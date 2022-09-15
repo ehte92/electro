@@ -1,10 +1,12 @@
 import {
+  ArrowBackIcon,
   Box,
   Button,
   Center,
   Divider,
   Input,
   KeyboardAvoidingView,
+  Pressable,
   ScrollView,
   Text,
 } from "native-base";
@@ -20,14 +22,34 @@ const { width } = Dimensions.get("screen");
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.getCart.cart.products);
-  const totalPrice = useSelector(
+  const subTotalPrice = useSelector(
     (state) => state.getCart.cart.cart_total_display
+  );
+  const totalPrice = useSelector(
+    (state) => state.getCart.cart.order_total_display
   );
   const totalQuantity = useSelector(
     (state) => state.getCart.cart.total_quantity_in_cart
   );
+  const shippingFee = useSelector(
+    (state) => state.getCart.cart.shipping_fee_display
+  );
+  const additionalFeeLabel = useSelector(
+    (state) => state.getCart.cart.additional_fee_label
+  );
+  const additionalFee = useSelector(
+    (state) => state.getCart.cart.additional_fee
+  );
   useEffect(() => {
     dispatch(getAsyncCart());
+    navigation.setOptions({
+      headerRight: () => null,
+      headerLeft: () => (
+        <Pressable onPress={() => navigation.goBack()}>
+          <ArrowBackIcon size="5" ml="4" mr="2" color="black" />
+        </Pressable>
+      ),
+    });
   }, []);
   return (
     <Background>
@@ -73,15 +95,16 @@ export default function CartScreen({ navigation }) {
               <Box
                 flexDirection="row"
                 justifyContent="space-between"
-                marginY={4}
+                marginTop={4}
               >
                 <Text fontFamily="body" fontWeight="400">
-                  Subtotal ({totalQuantity} items)
+                  Subtotal
                 </Text>
                 <Text fontFamily="body" fontSize="md" fontWeight="600">
-                  {totalPrice}
+                  {subTotalPrice}
                 </Text>
               </Box>
+              <Divider my="2" />
               <Box
                 flexDirection="row"
                 justifyContent="space-between"
@@ -91,7 +114,15 @@ export default function CartScreen({ navigation }) {
                   Shipping
                 </Text>
                 <Text fontFamily="body" fontSize="md" fontWeight="600">
-                  Free
+                  {shippingFee ? shippingFee : "Free"}
+                </Text>
+              </Box>
+              <Box flexDirection="row" justifyContent="space-between">
+                <Text fontFamily="body" fontWeight="400">
+                  {additionalFeeLabel}
+                </Text>
+                <Text fontFamily="body" fontSize="md" fontWeight="600">
+                  {additionalFee}
                 </Text>
               </Box>
               <Divider my="2" />
@@ -102,7 +133,7 @@ export default function CartScreen({ navigation }) {
                 marginBottom={4}
               >
                 <Text fontFamily="body" fontWeight="400">
-                  Total
+                  Total ({totalQuantity} items)
                 </Text>
                 <Text fontFamily="body" fontSize="md" fontWeight="600">
                   {totalPrice}

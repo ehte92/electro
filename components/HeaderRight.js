@@ -1,7 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 
-export default function HeaderRight({ navigation }) {
+export default function HeaderRight({ navigation, hideProfile, hideCart }) {
   return (
     <View
       style={{
@@ -11,29 +11,33 @@ export default function HeaderRight({ navigation }) {
         paddingHorizontal: 10,
       }}
     >
-      <Pressable
-        style={{
-          margin: 10,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onPress={() => {
-          navigation.navigate("Profile");
-        }}
-      >
-        <AntDesign name="user" size={24} color="black" />
-      </Pressable>
-      <Pressable
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onPress={() => {
-          navigation.navigate("Cart");
-        }}
-      >
-        <AntDesign name="shoppingcart" size={24} color="black" />
-      </Pressable>
+      {hideProfile ? null : (
+        <Pressable
+          style={{
+            margin: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={() => {
+            navigation.navigate("Profile");
+          }}
+        >
+          <AntDesign name="user" size={24} color="black" />
+        </Pressable>
+      )}
+      {hideCart ? null : (
+        <Pressable
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={() => {
+            navigation.navigate("Cart");
+          }}
+        >
+          <AntDesign name="shoppingcart" size={24} color="black" />
+        </Pressable>
+      )}
     </View>
   );
 }

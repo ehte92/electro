@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import axios, { CancelToken as ICancelToken } from "axios";
+import { isUndefined } from "lodash";
 import { Box, FlatList, Icon, Input, Select, Spinner } from "native-base";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
@@ -10,7 +11,7 @@ import fetcher from "../helpers/network";
 const { width } = Dimensions.get("window");
 const { CancelToken } = axios;
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [productList, setProductList] = useState([]);
   const [sortList, setSortList] = useState([]);
@@ -18,16 +19,20 @@ export default function HomeScreen({ navigation }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [orderby, setOrderby] = useState("popularity");
+  const paramUrl = isUndefined(route.params) ? "" : route.params.paramUrl;
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, orderby]);
+  }, [currentPage, orderby, paramUrl]);
 
   const fetchData = async () => {
     if (currentPage === 1) {
       setLoading(true);
     }
-    const url = `wp-json/uruvak/v1/shop/products?page=${currentPage}&order_by=${orderby}`;
+    const url =
+      paramUrl === ""
+        ? `wp-json/uruvak/v1/shop/products?page=${currentPage}&order_by=${orderby}`
+        : `wp-json/uruvak/v1/shop/products?page=${currentPage}&order_by=${orderby}&${paramUrl}`;
     const source = CancelToken.source();
     const promise = fetcher();
     promise
@@ -112,8 +117,9 @@ export default function HomeScreen({ navigation }) {
       ) : (
         <FlatList
           data={productList}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ProductCard
+              index={index}
               name={item.name}
               category={item.product_category}
               imageSource={item.thumbnail}
@@ -139,7 +145,7 @@ export default function HomeScreen({ navigation }) {
             return null;
           }}
           onEndReached={loadMoreItems}
-          onEndReachedThreshold={0.3}
+          onEndReachedThreshold={0.9}
         />
       )}
     </Background>

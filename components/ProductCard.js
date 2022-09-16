@@ -1,6 +1,7 @@
 import { Box, Heading, Image, Pressable, Text } from "native-base";
 
 export default function ProductCard({
+  index,
   name,
   category,
   imageSource,
@@ -8,7 +9,7 @@ export default function ProductCard({
   onPress,
 }) {
   return (
-    <Box flex={1} margin={2} rounded="lg" shadow={4} bg="white">
+    <Box key={index} flex={1} margin={2} rounded="lg" shadow={4} bg="white">
       <Pressable
         flex={1}
         onPress={onPress}

@@ -1,23 +1,29 @@
+import axios from "axios";
 import {
   ArrowBackIcon,
   Box,
   Button,
   Center,
   Divider,
+  FlatList,
   Input,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
+  Spinner,
   Text,
 } from "native-base";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Background from "../components/Background";
 import CartCard from "../components/CartCard";
+import ProductCard from "../components/ProductCard";
+import fetcher from "../helpers/network";
 import { getAsyncCart } from "../store/cartSlice";
 
 const { width } = Dimensions.get("screen");
+const { CancelToken } = axios;
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -40,6 +46,11 @@ export default function CartScreen({ navigation }) {
   const additionalFee = useSelector(
     (state) => state.getCart.cart.additional_fee
   );
+  const [loading, setLoading] = useState(false);
+  const [productList, setProductList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+
   useEffect(() => {
     dispatch(getAsyncCart());
     navigation.setOptions({
@@ -51,6 +62,43 @@ export default function CartScreen({ navigation }) {
       ),
     });
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
+  const fetchData = async () => {
+    if (currentPage === 1) {
+      setLoading(true);
+    }
+    const url = `wp-json/uruvak/v1/shop/products?page=${currentPage}`;
+    const source = CancelToken.source();
+    const promise = fetcher();
+    promise
+      .get(url, {
+        cancelToken: source.token,
+      })
+      .then(({ data }) => {
+        setProductList((prev) => [...prev, ...data.data]);
+        setTotalPage(data.max_pages);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(
+          "🚀 ~ file: HomeScreen.js ~ line 36 ~ promise ~ error",
+          error
+        );
+      });
+    promise.cancel = () => {
+      source.cancel("Operation canceled by the user.");
+    };
+  };
+
+  const loadMoreItems = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
   return (
     <Background>
       {cart && cart.length ? (
@@ -139,6 +187,51 @@ export default function CartScreen({ navigation }) {
                   {totalPrice}
                 </Text>
               </Box>
+            </Box>
+            <Box paddingX={4}>
+              <Text fontFamily="body" fontSize="md" fontWeight="600" mb="2">
+                Recommended for you
+              </Text>
+              {loading ? (
+                <Box flex={1} justifyContent="center" alignItems="center">
+                  <Spinner color="primary.300" size="lg" />
+                </Box>
+              ) : (
+                <FlatList
+                  data={productList}
+                  horizontal={true}
+                  renderItem={({ item, index }) => (
+                    <ProductCard
+                      index={index}
+                      name={item.name}
+                      category={item.product_category}
+                      imageSource={item.thumbnail}
+                      price={item.price_display}
+                      onPress={() =>
+                        navigation.navigate("ProductDetails", { item })
+                      }
+                    />
+                  )}
+                  keyExtractor={(item) => item.id}
+                  ListFooterComponent={() => {
+                    if (currentPage < totalPage) {
+                      return (
+                        <Box
+                          justifyContent="center"
+                          alignItems="center"
+                          flex={1}
+                          height={50}
+                        >
+                          <Spinner color="primary.300" size="lg" />
+                        </Box>
+                      );
+                    }
+                    return null;
+                  }}
+                  onEndReached={loadMoreItems}
+                  onEndReachedThreshold={0.8}
+                />
+              )}
             </Box>
           </ScrollView>
           <Box justifyContent={"center"} alignItems={"center"}>

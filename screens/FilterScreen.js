@@ -13,7 +13,7 @@ import {
   Text,
   VStack,
 } from "native-base";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dimensions } from "react-native";
 
 const { width } = Dimensions.get("screen");
@@ -24,6 +24,18 @@ export default function FilterScreen({ navigation, route }) {
   const sizeList = filterList.items.pa_size.values;
   const [colorValues, setColorValues] = useState([]);
   const [sizeValues, setSizeValues] = useState([]);
+  const [paramUrl, setParamUrl] = useState("");
+
+  useEffect(() => {
+    let colorParam = colorValues
+      .map((item) => `filter[pa_color]=${item}`)
+      .join("&");
+    let sizeParam = sizeValues
+      .map((item) => `filter[pa_size]=${item}`)
+      .join("&");
+    let param = `${colorParam}&${sizeParam}`.slice(0, -1);
+    setParamUrl(param);
+  }, [colorValues, sizeValues]);
 
   return (
     <Box safeAreaTop flex={1}>
@@ -71,6 +83,7 @@ export default function FilterScreen({ navigation, route }) {
               </VStack>
               <Checkbox.Group
                 accessibilityLabel="pick a color"
+                value={colorValues}
                 onChange={(values) => {
                   setColorValues(values || []);
                 }}
@@ -105,9 +118,10 @@ export default function FilterScreen({ navigation, route }) {
                 </Box>
               </VStack>
               <Checkbox.Group
+                value={sizeValues}
                 accessibilityLabel="pick a size"
                 onChange={(values) => {
-                  setSizeValues(values || []);
+                  setSizeValues(values);
                 }}
               >
                 {sizeList.map((size, index) => (
@@ -140,6 +154,10 @@ export default function FilterScreen({ navigation, route }) {
             fontSize: "md",
             lineHeight: "lg",
           }}
+          onPress={() => {
+            setColorValues([]);
+            setSizeValues([]);
+          }}
         >
           CLEAR
         </Button>
@@ -155,6 +173,7 @@ export default function FilterScreen({ navigation, route }) {
             fontSize: "md",
             lineHeight: "lg",
           }}
+          onPress={() => navigation.navigate("HomeScreen", { paramUrl })}
         >
           APPLY
         </Button>
